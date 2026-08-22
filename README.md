@@ -8,6 +8,12 @@ com exatamente a mesma especificação léxica e as mesmas regras de
 recuperação de erro nas duas versões (ver
 [`docs/especificacao-lexica.md`](docs/especificacao-lexica.md)).
 
+## Integrantes
+Alberto Dias - RA:2303748
+Guilherme Valerio - RA: 2401213
+Victor Marques - RA: 2401270
+Vitor Siqueira - RA: 2302346
+
 ## Estrutura do repositório
 
 ```
