@@ -120,18 +120,7 @@ cobertura do checklist:
   literais opcionais). O `expected.jsonl` desses casos foi gerado
   rodando o próprio scanner (por isso é autoconsistente com a
   implementação, e não uma referência externa).
-
-Se o professor disponibilizar os arquivos originais dessas pastas, basta
-substituí-los — a estrutura e os nomes de arquivo já seguem a convenção do
-`MANIFESTO.md`.
-
-## Checklist da Etapa 1 (conforme a aula)
-
-- [x] **01 Liste os tokens** — nome, lexema, linha, coluna e atributo (JSON Lines por padrão; `--format text` para tabela legível no Python)
-- [x] **02 Introduza erros** — símbolo inválido e cadeia não terminada (entre outros), ver `testes/exemplo-aula/exemplo_com_erros.c`
-- [x] **03 Verifique o diagnóstico** — cada erro traz linha, coluna e lexema; estratégia de recuperação documentada em `docs/especificacao-lexica.md`
-- [x] Palavras reservadas, operadores longos (maximal munch), comentários, posições, erros e testes — cobertos pelos 19 casos de teste, em Python e em C
-- [x] Códigos em C e em Python, testes e resultados no repositório (conforme pedido na entrega)
+  
 
 ## Chamada do scanner
 
