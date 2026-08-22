@@ -1,0 +1,2 @@
+{"error":"INCOMPLETE_LOGICAL_OPERATOR","lexeme":"&","line":1,"column":15}
+{"error":"INCOMPLETE_LOGICAL_OPERATOR","lexeme":"|","line":2,"column":10}

@@ -1,0 +1,32 @@
+TOKENS
+------------------------------------------------------------------------
+   #  TOKEN       LEXEMA              ATRIBUTO         LINHA  COL
+   1  INT         int                                      1    1
+   2  IDENT       main                'main'               1    5
+   3  LPAREN      (                                        1    9
+   4  RPAREN      )                                        1   10
+   5  LBRACE      {                                        1   12
+   6  INT         int                                      2    1
+   7  IDENT       total               'total'              2    5
+   8  ASSIGN      =                                        2   11
+   9  INT_LIT     2                   2                    2   13
+  10  PLUS        +                                        2   15
+  11  INT_LIT     3                   3                    2   17
+  12  INT_LIT     4                   4                    2   21
+  13  SEMICOLON   ;                                        2   22
+  14  PRINT       print                                    4    1
+  15  LPAREN      (                                        4    6
+  16  RPAREN      )                                        4   23
+  17  SEMICOLON   ;                                        4   24
+  18  RETURN      return                                   4   26
+  19  INT_LIT     0                   0                    4   33
+  20  SEMICOLON   ;                                        4   34
+  21  RBRACE      }                                        4   36
+  22  EOF         <eof>                                    5    1
+
+DIAGNOSTICOS
+------------------------------------------------------------------------
+[2:19] UNKNOWN_SYMBOL: '@' - simbolo nao reconhecido pela linguagem
+[4:7] UNTERMINATED_STRING_LITERAL: '"total calculado); return 0; }' - literal de cadeia nao foi fechado com "
+
+Total de tokens: 22  |  Total de erros: 2

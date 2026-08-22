@@ -1,0 +1,16 @@
+{"token":"CHAR","lexeme":"char","attribute":null,"line":1,"column":1}
+{"token":"IDENT","lexeme":"letra","attribute":"letra","line":1,"column":6}
+{"token":"ASSIGN","lexeme":"=","attribute":null,"line":1,"column":12}
+{"token":"CHAR_LIT","lexeme":"'x'","attribute":"x","line":1,"column":14}
+{"token":"SEMICOLON","lexeme":";","attribute":null,"line":1,"column":17}
+{"token":"PRINT","lexeme":"print","attribute":null,"line":2,"column":1}
+{"token":"LPAREN","lexeme":"(","attribute":null,"line":2,"column":6}
+{"token":"STRING_LIT","lexeme":"\"ola mundo\"","attribute":"ola mundo","line":2,"column":7}
+{"token":"RPAREN","lexeme":")","attribute":null,"line":2,"column":18}
+{"token":"SEMICOLON","lexeme":";","attribute":null,"line":2,"column":19}
+{"token":"PRINT","lexeme":"print","attribute":null,"line":3,"column":1}
+{"token":"LPAREN","lexeme":"(","attribute":null,"line":3,"column":6}
+{"token":"STRING_LIT","lexeme":"\"linha com espacos e 123\"","attribute":"linha com espacos e 123","line":3,"column":7}
+{"token":"RPAREN","lexeme":")","attribute":null,"line":3,"column":32}
+{"token":"SEMICOLON","lexeme":";","attribute":null,"line":3,"column":33}
+{"token":"EOF","lexeme":"","attribute":null,"line":4,"column":1}

@@ -1,0 +1,4 @@
+int inteiro = 1;
+int intervalo = 2;
+float floating = 3.5;
+bool booleano = true;

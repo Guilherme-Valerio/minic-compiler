@@ -1,0 +1,5 @@
+int idade = 25;
+float altura = 1.75;
+bool ativo = true;
+char inicial = 'M';
+idade = idade + 1;

@@ -1,0 +1,4 @@
+// declaracao inicial
+int total = 0;   /* acumulador */
+total = total + 1;
+// fim do trecho

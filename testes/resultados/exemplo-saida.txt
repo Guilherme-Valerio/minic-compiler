@@ -1,0 +1,33 @@
+TOKENS
+------------------------------------------------------------------------
+   #  TOKEN       LEXEMA              ATRIBUTO         LINHA  COL
+   1  INT         int                                      1    1
+   2  IDENT       main                'main'               1    5
+   3  LPAREN      (                                        1    9
+   4  RPAREN      )                                        1   10
+   5  LBRACE      {                                        1   12
+   6  INT         int                                      2    1
+   7  IDENT       total               'total'              2    5
+   8  ASSIGN      =                                        2   11
+   9  INT_LIT     2                   2                    2   13
+  10  PLUS        +                                        2   15
+  11  INT_LIT     3                   3                    2   17
+  12  STAR        *                                        2   19
+  13  INT_LIT     4                   4                    2   21
+  14  SEMICOLON   ;                                        2   22
+  15  PRINT       print                                    4    1
+  16  LPAREN      (                                        4    6
+  17  IDENT       total               'total'              4    7
+  18  RPAREN      )                                        4   12
+  19  SEMICOLON   ;                                        4   13
+  20  RETURN      return                                   4   15
+  21  INT_LIT     0                   0                    4   22
+  22  SEMICOLON   ;                                        4   23
+  23  RBRACE      }                                        4   25
+  24  EOF         <eof>                                    5    1
+
+DIAGNOSTICOS
+------------------------------------------------------------------------
+(nenhum erro lexico encontrado)
+
+Total de tokens: 24  |  Total de erros: 0

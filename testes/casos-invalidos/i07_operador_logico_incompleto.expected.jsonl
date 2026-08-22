@@ -1,0 +1,12 @@
+{"token":"BOOL","lexeme":"bool","attribute":null,"line":1,"column":1}
+{"token":"IDENT","lexeme":"flag","attribute":"flag","line":1,"column":6}
+{"token":"ASSIGN","lexeme":"=","attribute":null,"line":1,"column":11}
+{"token":"IDENT","lexeme":"a","attribute":"a","line":1,"column":13}
+{"token":"IDENT","lexeme":"b","attribute":"b","line":1,"column":17}
+{"token":"SEMICOLON","lexeme":";","attribute":null,"line":1,"column":18}
+{"token":"IDENT","lexeme":"flag","attribute":"flag","line":2,"column":1}
+{"token":"ASSIGN","lexeme":"=","attribute":null,"line":2,"column":6}
+{"token":"IDENT","lexeme":"a","attribute":"a","line":2,"column":8}
+{"token":"IDENT","lexeme":"b","attribute":"b","line":2,"column":12}
+{"token":"SEMICOLON","lexeme":";","attribute":null,"line":2,"column":13}
+{"token":"EOF","lexeme":"","attribute":null,"line":3,"column":1}

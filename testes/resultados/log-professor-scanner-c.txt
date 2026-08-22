@@ -1,0 +1,146 @@
+== Compilando o analisador léxico ==
+Executável gerado: ./scanner
+
+================================================================
+Caso: casos-invalidos/i01_simbolo_desconhecido.minic
+Comando: ./scanner ./casos-invalidos/i01_simbolo_desconhecido.minic
+Resultado esperado: ./casos-invalidos/i01_simbolo_desconhecido.expected.jsonl
+{"error":"UNKNOWN_SYMBOL","lexeme":"@","line":1,"column":7}
+OK: 6 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-invalidos/i02_comentario_nao_terminado.minic
+Comando: ./scanner ./casos-invalidos/i02_comentario_nao_terminado.minic
+Resultado esperado: ./casos-invalidos/i02_comentario_nao_terminado.expected.jsonl
+{"error":"UNTERMINATED_BLOCK_COMMENT","lexeme":"/* comentário sem fechamento\n","line":1,"column":12}
+OK: 6 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-invalidos/i03_caractere_nao_terminado.minic
+Comando: ./scanner ./casos-invalidos/i03_caractere_nao_terminado.minic
+Resultado esperado: ./casos-invalidos/i03_caractere_nao_terminado.expected.jsonl
+{"error":"UNTERMINATED_CHAR_LITERAL","lexeme":"'a","line":1,"column":10}
+OK: 9 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-invalidos/i04_cadeia_nao_terminada.minic
+Comando: ./scanner ./casos-invalidos/i04_cadeia_nao_terminada.minic
+Resultado esperado: ./casos-invalidos/i04_cadeia_nao_terminada.expected.jsonl
+{"error":"UNTERMINATED_STRING_LITERAL","lexeme":"\"texto sem fim);","line":1,"column":7}
+OK: 5 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-invalidos/i05_numero_real_malformado.minic
+Comando: ./scanner ./casos-invalidos/i05_numero_real_malformado.minic
+Resultado esperado: ./casos-invalidos/i05_numero_real_malformado.expected.jsonl
+{"error":"MALFORMED_REAL_LITERAL","lexeme":"12.","line":1,"column":9}
+OK: 6 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-invalidos/i06_identificador_iniciado_por_digito.minic
+Comando: ./scanner ./casos-invalidos/i06_identificador_iniciado_por_digito.minic
+Resultado esperado: ./casos-invalidos/i06_identificador_iniciado_por_digito.expected.jsonl
+{"error":"INVALID_IDENTIFIER","lexeme":"123abc","line":1,"column":5}
+OK: 7 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-invalidos/i07_operador_logico_incompleto.minic
+Comando: ./scanner ./casos-invalidos/i07_operador_logico_incompleto.minic
+Resultado esperado: ./casos-invalidos/i07_operador_logico_incompleto.expected.jsonl
+{"error":"INCOMPLETE_LOGICAL_OPERATOR","lexeme":"&","line":1,"column":15}
+{"error":"INCOMPLETE_LOGICAL_OPERATOR","lexeme":"|","line":2,"column":10}
+OK: 12 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-programas-c/c01_fibonacci.c
+Comando: ./scanner ./casos-programas-c/c01_fibonacci.c
+Resultado esperado: ./casos-programas-c/c01_fibonacci.c.expected.jsonl
+OK: 85 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-programas-c/c02_primos.c
+Comando: ./scanner ./casos-programas-c/c02_primos.c
+Resultado esperado: ./casos-programas-c/c02_primos.c.expected.jsonl
+OK: 96 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-programas-c/c03_media_vetor.c
+Comando: ./scanner ./casos-programas-c/c03_media_vetor.c
+Resultado esperado: ./casos-programas-c/c03_media_vetor.c.expected.jsonl
+OK: 115 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-programas-c/c04_menu_interativo.c
+Comando: ./scanner ./casos-programas-c/c04_menu_interativo.c
+Resultado esperado: ./casos-programas-c/c04_menu_interativo.c.expected.jsonl
+OK: 95 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-programas-c/c05_controle_temperatura.c
+Comando: ./scanner ./casos-programas-c/c05_controle_temperatura.c
+Resultado esperado: ./casos-programas-c/c05_controle_temperatura.c.expected.jsonl
+OK: 61 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-validos/v01_declaracoes.minic
+Comando: ./scanner ./casos-validos/v01_declaracoes.minic
+Resultado esperado: ./casos-validos/v01_declaracoes.expected.jsonl
+OK: 27 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-validos/v02_expressao_precedencia.minic
+Comando: ./scanner ./casos-validos/v02_expressao_precedencia.minic
+Resultado esperado: ./casos-validos/v02_expressao_precedencia.expected.jsonl
+OK: 31 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-validos/v03_operadores_compostos.minic
+Comando: ./scanner ./casos-validos/v03_operadores_compostos.minic
+Resultado esperado: ./casos-validos/v03_operadores_compostos.expected.jsonl
+OK: 31 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-validos/v04_comentarios_e_posicoes.minic
+Comando: ./scanner ./casos-validos/v04_comentarios_e_posicoes.minic
+Resultado esperado: ./casos-validos/v04_comentarios_e_posicoes.expected.jsonl
+OK: 12 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-validos/v05_funcoes_e_vetores.minic
+Comando: ./scanner ./casos-validos/v05_funcoes_e_vetores.minic
+Resultado esperado: ./casos-validos/v05_funcoes_e_vetores.expected.jsonl
+OK: 48 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-validos/v06_reservadas_vs_identificadores.minic
+Comando: ./scanner ./casos-validos/v06_reservadas_vs_identificadores.minic
+Resultado esperado: ./casos-validos/v06_reservadas_vs_identificadores.expected.jsonl
+OK: 21 token(s).
+RESULTADO: OK
+
+================================================================
+Caso: casos-validos/v07_literais_opcionais.minic
+Comando: ./scanner ./casos-validos/v07_literais_opcionais.minic
+Resultado esperado: ./casos-validos/v07_literais_opcionais.expected.jsonl
+OK: 16 token(s).
+RESULTADO: OK
+
+================================================================
+Resumo: 19 OK, 0 falharam, 0 avisos, 19 casos verificados.

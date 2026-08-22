@@ -1,0 +1,3 @@
+char letra = 'x';
+print("ola mundo");
+print("linha com espacos e 123");

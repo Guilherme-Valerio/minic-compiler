@@ -1,0 +1,12 @@
+{"token":"INT","lexeme":"int","attribute":null,"line":2,"column":1}
+{"token":"IDENT","lexeme":"total","attribute":"total","line":2,"column":5}
+{"token":"ASSIGN","lexeme":"=","attribute":null,"line":2,"column":11}
+{"token":"INT_LIT","lexeme":"0","attribute":0,"line":2,"column":13}
+{"token":"SEMICOLON","lexeme":";","attribute":null,"line":2,"column":14}
+{"token":"IDENT","lexeme":"total","attribute":"total","line":3,"column":1}
+{"token":"ASSIGN","lexeme":"=","attribute":null,"line":3,"column":7}
+{"token":"IDENT","lexeme":"total","attribute":"total","line":3,"column":9}
+{"token":"PLUS","lexeme":"+","attribute":null,"line":3,"column":15}
+{"token":"INT_LIT","lexeme":"1","attribute":1,"line":3,"column":17}
+{"token":"SEMICOLON","lexeme":";","attribute":null,"line":3,"column":18}
+{"token":"EOF","lexeme":"","attribute":null,"line":5,"column":1}
