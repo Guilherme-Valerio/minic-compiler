@@ -4,3 +4,4 @@ __pycache__/
 src/scanner
 output.jsonl
 *.o
+src/parser

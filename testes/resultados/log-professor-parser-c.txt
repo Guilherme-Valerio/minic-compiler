@@ -1,0 +1,64 @@
+Parser: ./parser
+Diretório: ./testes-parser-50
+Casos encontrados: 50
+
+[01/50] codigo.c                             OK
+[02/50] codigo.c                             FALHOU (saída diferente)
+[03/50] codigo.c                             FALHOU (saída diferente)
+[04/50] codigo.c                             FALHOU (saída diferente)
+[05/50] codigo.c                             OK
+[06/50] codigo.c                             FALHOU (saída diferente)
+[07/50] codigo.c                             FALHOU (saída diferente)
+[08/50] codigo.c                             FALHOU (saída diferente)
+[09/50] codigo.c                             FALHOU (saída diferente)
+[10/50] codigo.c                             FALHOU (saída diferente)
+[11/50] codigo.c                             OK
+[12/50] codigo.c                             OK
+[13/50] codigo.c                             OK
+[14/50] codigo.c                             OK
+[15/50] codigo.c                             OK
+[16/50] codigo.c                             OK
+[17/50] codigo.c                             OK
+[18/50] codigo.c                             OK
+[19/50] codigo.c                             OK
+[20/50] codigo.c                             OK
+[21/50] codigo.c                             OK
+[22/50] codigo.c                             OK
+[23/50] codigo.c                             OK
+[24/50] codigo.c                             FALHOU (saída diferente)
+[25/50] codigo.c                             OK
+[26/50] codigo.c                             FALHOU (saída diferente)
+[27/50] codigo.c                             FALHOU (saída diferente)
+[28/50] codigo.c                             FALHOU (saída diferente)
+[29/50] codigo.c                             FALHOU (saída diferente)
+[30/50] codigo.c                             FALHOU (saída diferente)
+[31/50] codigo.c                             FALHOU (saída diferente)
+[32/50] codigo.c                             FALHOU (saída diferente)
+[33/50] codigo.c                             FALHOU (saída diferente)
+[34/50] codigo.c                             FALHOU (saída diferente)
+[35/50] codigo.c                             FALHOU (saída diferente)
+[36/50] codigo.c                             FALHOU (saída diferente)
+[37/50] codigo.c                             FALHOU (saída diferente)
+[38/50] codigo.c                             FALHOU (saída diferente)
+[39/50] codigo.c                             FALHOU (saída diferente)
+[40/50] codigo.c                             FALHOU (saída diferente)
+[41/50] codigo.c                             FALHOU (saída diferente)
+[42/50] codigo.c                             FALHOU (saída diferente)
+[43/50] codigo.c                             FALHOU (saída diferente)
+[44/50] codigo.c                             FALHOU (saída diferente)
+[45/50] codigo.c                             FALHOU (saída diferente)
+[46/50] codigo.c                             FALHOU (saída diferente)
+[47/50] codigo.c                             FALHOU (saída diferente)
+[48/50] codigo.c                             FALHOU (saída diferente)
+[49/50] codigo.c                             FALHOU (saída diferente)
+[50/50] codigo.c                             FALHOU (saída diferente)
+
+Resumo
+-------
+Total de casos:       50
+Aprovados:            16
+Reprovados:           34
+Erros sintáticos:     25
+Erros de execução:    0
+Esperados ausentes:   0
+Resultado final: há casos que precisam ser corrigidos

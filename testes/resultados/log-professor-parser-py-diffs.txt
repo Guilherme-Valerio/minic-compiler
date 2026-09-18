@@ -1,0 +1,309 @@
+Parser: ./parser.py
+Diretório: ./testes-parser-50
+Casos encontrados: 50
+
+[01/50] codigo.c                             OK
+[02/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/2.expected.norm	2026-09-18 02:07:56.448008822 +0000
+    +++ /tmp/parser-py-FeEQj0/2.actual.norm	2026-09-18 02:07:56.449328304 +0000
+    @@ -1 +1 @@
+    -Program(VarDecl(int x = Lit(int,42)))
+    +Program(VarDecl(int x=Lit(int,42)))
+[03/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/3.expected.norm	2026-09-18 02:07:56.496704719 +0000
+    +++ /tmp/parser-py-FeEQj0/3.actual.norm	2026-09-18 02:07:56.497328307 +0000
+    @@ -1 +1 @@
+    -Program(VarDecl(int x = Binary(+, Lit(int,2), Binary(*, Lit(int,3), Lit(int,4)))))
+    +Program(VarDecl(int x=Binary(+,Lit(int,2),Binary(*,Lit(int,3),Lit(int,4)))))
+[04/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/4.expected.norm	2026-09-18 02:07:56.541328309 +0000
+    +++ /tmp/parser-py-FeEQj0/4.actual.norm	2026-09-18 02:07:56.544191691 +0000
+    @@ -1 +1 @@
+    -Program(VarDecl(int a), VarDecl(float media), VarDecl(bool ativo = Lit(bool,true)))
+    +Program(VarDecl(int a), VarDecl(float media), VarDecl(bool ativo=Lit(bool,true)))
+[05/50] codigo.c                             OK
+[06/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/6.expected.norm	2026-09-18 02:07:56.637328315 +0000
+    +++ /tmp/parser-py-FeEQj0/6.actual.norm	2026-09-18 02:07:56.641122050 +0000
+    @@ -1 +1 @@
+    -Program(Function(int soma(int a,int b) Block(Return(Binary(+, Id(a), Id(b))))))
+    +Program(Function(int soma(int a,int b) Block(Return(Binary(+,Id(a),Id(b))))))
+[07/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/7.expected.norm	2026-09-18 02:07:56.687744820 +0000
+    +++ /tmp/parser-py-FeEQj0/7.actual.norm	2026-09-18 02:07:56.689328318 +0000
+    @@ -1 +1 @@
+    -Program(Function(int main() Block(VarDecl(int x), ExprStmt(Assign(Id(x), Lit(int,7))), Return(Id(x)))))
+    +Program(Function(int main() Block(VarDecl(int x), ExprStmt(Assign(Id(x),Lit(int,7))), Return(Id(x)))))
+[08/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/8.expected.norm	2026-09-18 02:07:56.736985407 +0000
+    +++ /tmp/parser-py-FeEQj0/8.actual.norm	2026-09-18 02:07:56.737328321 +0000
+    @@ -1 +1 @@
+    -Program(Function(int main() Block(VarDecl(int x = Lit(int,1)), If(Id(x), ExprStmt(Assign(Id(x),Lit(int,2))), NULL), Return(Id(x)))))
+    +Program(Function(int main() Block(VarDecl(int x=Lit(int,1)), If(Id(x),ExprStmt(Assign(Id(x),Lit(int,2))),NULL), Return(Id(x)))))
+[09/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/9.expected.norm	2026-09-18 02:07:56.787860458 +0000
+    +++ /tmp/parser-py-FeEQj0/9.actual.norm	2026-09-18 02:07:56.789328324 +0000
+    @@ -1 +1 @@
+    -Program(Function(int main() Block(VarDecl(int x = Lit(int,1)), If(Id(x), ExprStmt(Assign(Id(x),Lit(int,2))), ExprStmt(Assign(Id(x),Lit(int,3)))), Return(Id(x)))))
+    +Program(Function(int main() Block(VarDecl(int x=Lit(int,1)), If(Id(x),ExprStmt(Assign(Id(x),Lit(int,2))),ExprStmt(Assign(Id(x),Lit(int,3)))), Return(Id(x)))))
+[10/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/10.expected.norm	2026-09-18 02:07:56.841328327 +0000
+    +++ /tmp/parser-py-FeEQj0/10.actual.norm	2026-09-18 02:07:56.844548070 +0000
+    @@ -1 +1 @@
+    -Program(Function(int main() Block(VarDecl(int i=Lit(int,0)), While(Binary(<,Id(i),Lit(int,10)), ExprStmt(Assign(Id(i),Binary(+,Id(i),Lit(int,1))))), Return(Id(i)))))
+    +Program(Function(int main() Block(VarDecl(int i=Lit(int,0)), While(Binary(<,Id(i),Lit(int,10)),ExprStmt(Assign(Id(i),Binary(+,Id(i),Lit(int,1))))), Return(Id(i)))))
+[11/50] codigo.c                             OK
+[12/50] codigo.c                             OK
+[13/50] codigo.c                             OK
+[14/50] codigo.c                             OK
+[15/50] codigo.c                             OK
+[16/50] codigo.c                             OK
+[17/50] codigo.c                             OK
+[18/50] codigo.c                             OK
+[19/50] codigo.c                             OK
+[20/50] codigo.c                             OK
+[21/50] codigo.c                             OK
+[22/50] codigo.c                             OK
+[23/50] codigo.c                             OK
+[24/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/24.expected.norm	2026-09-18 02:07:57.547701422 +0000
+    +++ /tmp/parser-py-FeEQj0/24.actual.norm	2026-09-18 02:07:57.549328369 +0000
+    @@ -1 +1 @@
+    -Program(Function(int main() Block(VarDecl(int i=Lit(int,0)), While(Binary(||,Binary(<,Id(i),Lit(int,3)),Binary(==,Id(i),Lit(int,9))),Block(ExprStmt(Assign(Id(i),Binary(+,Id(i),Lit(int,1))))))), Return(Id(i)))))
+    +Program(Function(int main() Block(VarDecl(int i=Lit(int,0)), While(Binary(||,Binary(<,Id(i),Lit(int,3)),Binary(==,Id(i),Lit(int,9))),Block(ExprStmt(Assign(Id(i),Binary(+,Id(i),Lit(int,1)))))), Return(Id(i)))))
+[25/50] codigo.c                             OK
+[26/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/26.expected.norm	2026-09-18 02:07:57.641328375 +0000
+    +++ /tmp/parser-py-FeEQj0/26.actual.norm	2026-09-18 02:07:57.644784661 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 2, coluna 1: esperado ';' apos a declaracao de 'x', mas foi encontrado fim do arquivo
+    +     2 |
+    +       | ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[27/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/27.expected.norm	2026-09-18 02:07:57.692260445 +0000
+    +++ /tmp/parser-py-FeEQj0/27.actual.norm	2026-09-18 02:07:57.693328378 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 20: esperado ';' apos a expressao, mas foi encontrado 'return'
+    +     1 | int main() { x = 1 return 0; }
+    +       |                    ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[28/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/28.expected.norm	2026-09-18 02:07:57.743748981 +0000
+    +++ /tmp/parser-py-FeEQj0/28.actual.norm	2026-09-18 02:07:57.745328381 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 24: esperado ')' para fechar a condicao do 'if', mas foi encontrado '{'
+    +     1 | int main() { if (x > 0 { return 1; } }
+    +       |                        ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[29/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/29.expected.norm	2026-09-18 02:07:57.793290432 +0000
+    +++ /tmp/parser-py-FeEQj0/29.actual.norm	2026-09-18 02:07:57.793328384 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 12: esperado '{' para iniciar o corpo da funcao 'main', mas foi encontrado 'return'
+    +     1 | int main() return 0; }
+    +       |            ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[30/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/30.expected.norm	2026-09-18 02:07:57.843600108 +0000
+    +++ /tmp/parser-py-FeEQj0/30.actual.norm	2026-09-18 02:07:57.845328387 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 2, coluna 1: esperado '}' para fechar o bloco aberto na linha 1, coluna 12, mas foi encontrado fim do arquivo
+    +     2 |
+    +       | ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[31/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/31.expected.norm	2026-09-18 02:07:57.893265706 +0000
+    +++ /tmp/parser-py-FeEQj0/31.actual.norm	2026-09-18 02:07:57.893328390 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 11: esperado tipo (int, float, bool, char ou void) do parametro ou ')' na lista de parametros de 'main', mas foi encontrado '{'
+    +     1 | int main( { return 0; }
+    +       |           ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[32/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/32.expected.norm	2026-09-18 02:07:57.941328392 +0000
+    +++ /tmp/parser-py-FeEQj0/32.actual.norm	2026-09-18 02:07:57.943848870 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 10: esperado tipo (int, float, bool, char ou void) do parametro ou ')' na lista de parametros de 'soma', mas foi encontrado identificador 'a'
+    +     1 | int soma(a, int b) { return a; }
+    +       |          ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[33/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/33.expected.norm	2026-09-18 02:07:57.989328395 +0000
+    +++ /tmp/parser-py-FeEQj0/33.actual.norm	2026-09-18 02:07:57.993173699 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 13: esperado identificador (nome do parametro) apos o tipo 'int', mas foi encontrado ','
+    +     1 | int soma(int, int b) { return a; }
+    +       |             ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[34/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/34.expected.norm	2026-09-18 02:07:58.039415572 +0000
+    +++ /tmp/parser-py-FeEQj0/34.actual.norm	2026-09-18 02:07:58.041485092 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 16: esperado tipo (int, float, bool, char ou void) do parametro, mas foi encontrado ','
+    +     1 | int soma(int a,, int b) { return a; }
+    +       |                ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[35/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/35.expected.norm	2026-09-18 02:07:58.084997694 +0000
+    +++ /tmp/parser-py-FeEQj0/35.actual.norm	2026-09-18 02:07:58.085328401 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 9: esperado expressao (identificador, literal ou '('), mas foi encontrado ';'
+    +     1 | int x = ;
+    +       |         ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[36/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/36.expected.norm	2026-09-18 02:07:58.135104539 +0000
+    +++ /tmp/parser-py-FeEQj0/36.actual.norm	2026-09-18 02:07:58.137082829 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 13: esperado expressao (identificador, literal ou '('), mas foi encontrado ';'
+    +     1 | int x = 1 + ;
+    +       |             ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[37/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/37.expected.norm	2026-09-18 02:07:58.181328407 +0000
+    +++ /tmp/parser-py-FeEQj0/37.actual.norm	2026-09-18 02:07:58.184701943 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 13: esperado expressao (identificador, literal ou '('), mas foi encontrado '/'
+    +     1 | int x = 1 * / 2;
+    +       |             ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[38/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/38.expected.norm	2026-09-18 02:07:58.231930715 +0000
+    +++ /tmp/parser-py-FeEQj0/38.actual.norm	2026-09-18 02:07:58.233328410 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 14: esperado expressao (identificador, literal ou '('), mas foi encontrado '='
+    +     1 | int main() { = 4; }
+    +       |              ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[39/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/39.expected.norm	2026-09-18 02:07:58.281530219 +0000
+    +++ /tmp/parser-py-FeEQj0/39.actual.norm	2026-09-18 02:07:58.283559170 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 22: esperado ')' para fechar a chamada de 'foo', mas foi encontrado ';'
+    +     1 | int main() { foo(1, 2; }
+    +       |                      ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[40/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/40.expected.norm	2026-09-18 02:07:58.331963930 +0000
+    +++ /tmp/parser-py-FeEQj0/40.actual.norm	2026-09-18 02:07:58.333328416 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 20: esperado expressao (argumento) apos ',', mas foi encontrado ')'
+    +     1 | int main() { foo(1,); }
+    +       |                    ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[41/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/41.expected.norm	2026-09-18 02:07:58.380559882 +0000
+    +++ /tmp/parser-py-FeEQj0/41.actual.norm	2026-09-18 02:07:58.381328419 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 28: esperado ']' para fechar o indice de 'a', mas foi encontrado '='
+    +     1 | int main() { int a[3]; a[1 = 2; }
+    +       |                            ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[42/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/42.expected.norm	2026-09-18 02:07:58.429328421 +0000
+    +++ /tmp/parser-py-FeEQj0/42.actual.norm	2026-09-18 02:07:58.431766744 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 26: esperado expressao de indice (identificador, literal ou '('), mas foi encontrado ']'
+    +     1 | int main() { int a[3]; a[] = 2; }
+    +       |                          ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[43/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/43.expected.norm	2026-09-18 02:07:58.479700707 +0000
+    +++ /tmp/parser-py-FeEQj0/43.actual.norm	2026-09-18 02:07:58.481328425 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 28: esperado inicio de comando (statement), mas foi encontrado '}'
+    +     1 | int main() { while (x < 2) }
+    +       |                            ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[44/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/44.expected.norm	2026-09-18 02:07:58.528681591 +0000
+    +++ /tmp/parser-py-FeEQj0/44.actual.norm	2026-09-18 02:07:58.529328427 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 14: token 'else' inesperado: 'else' sem um 'if' correspondente
+    +     1 | int main() { else return 0; }
+    +       |              ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[45/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/45.expected.norm	2026-09-18 02:07:58.575802073 +0000
+    +++ /tmp/parser-py-FeEQj0/45.actual.norm	2026-09-18 02:07:58.577519302 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 23: esperado ';' apos o 'return', mas foi encontrado '}'
+    +     1 | int main() { return 1 }
+    +       |                       ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[46/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/46.expected.norm	2026-09-18 02:07:58.621370809 +0000
+    +++ /tmp/parser-py-FeEQj0/46.actual.norm	2026-09-18 02:07:58.623162569 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 5: esperado identificador (nome da variavel ou funcao) apos o tipo 'int', mas foi encontrado ';'
+    +     1 | int ;
+    +       |     ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[47/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/47.expected.norm	2026-09-18 02:07:58.667378960 +0000
+    +++ /tmp/parser-py-FeEQj0/47.actual.norm	2026-09-18 02:07:58.669358964 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 19: esperado identificador (nome da variavel) apos o tipo 'float', mas foi encontrado ';'
+    +     1 | int main() { float; return 0; }
+    +       |                   ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[48/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/48.expected.norm	2026-09-18 02:07:58.713548671 +0000
+    +++ /tmp/parser-py-FeEQj0/48.actual.norm	2026-09-18 02:07:58.715317872 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 8: esperado '{' para iniciar o corpo da funcao 'f', mas foi encontrado ';'
+    +     1 | int f();
+    +       |        ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[49/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/49.expected.norm	2026-09-18 02:07:58.761189981 +0000
+    +++ /tmp/parser-py-FeEQj0/49.actual.norm	2026-09-18 02:07:58.761328441 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 8: token '}' inesperado: nao ha bloco aberto para ser fechado
+    +     1 | int x; }
+    +       |        ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+[50/50] codigo.c                             FALHOU (saída diferente)
+    --- /tmp/parser-py-FeEQj0/50.expected.norm	2026-09-18 02:07:58.808865478 +0000
+    +++ /tmp/parser-py-FeEQj0/50.actual.norm	2026-09-18 02:07:58.809328444 +0000
+    @@ -1 +1,4 @@
+    -NÃO HÁ AST: o parser deve rejeitar a entrada.
+    +Erro de sintaxe na linha 1, coluna 18: esperado expressao (identificador, literal ou '('), mas foi encontrado ')'
+    +     1 | int main() { if () return 1; }
+    +       |                  ^
+    +Entrada rejeitada: 1 erro(s) encontrado(s); nenhuma AST foi gerada.
+
+Resumo
+-------
+Total de casos:       50
+Aprovados:            16
+Reprovados:           34
+Erros sintáticos:     25
+Erros de execução:    0
+Esperados ausentes:   0
+Resultado final: há casos que precisam ser corrigidos

@@ -1,0 +1,70 @@
+Parser: ./parser.py
+Casos: ./testes-parser-50
+
+01_declara_o_inteira_simples                   OK
+02_inicializa_o_inteira                        OK  (difere do esperado so no espacamento)
+03_express_o_aritm_tica_e_preced_ncia          OK  (difere do esperado so no espacamento)
+04_v_rias_declara_es_globais                   OK  (difere do esperado so no espacamento)
+05_fun_o_sem_par_metros                        OK
+06_fun_o_com_par_metros                        OK  (difere do esperado so no espacamento)
+07_atribui_o_simples                           OK  (difere do esperado so no espacamento)
+08_if_sem_else                                 OK  (difere do esperado so no espacamento)
+09_if_com_else                                 OK  (difere do esperado so no espacamento)
+10_while                                       OK  (difere do esperado so no espacamento)
+11_bloco_aninhado                              OK
+12_operadores_relacionais                      OK
+13_operador_un_rio                             OK
+14_chamada_sem_argumentos                      OK
+15_chamada_com_argumentos                      OK
+16_vetor_com_tamanho                           OK
+17_indexa_o_de_vetor                           OK
+18_express_o_com_par_nteses                    OK
+19_float_e_compara_o                           OK
+20_retorno_vazio                               OK
+21_fun_o_com_v_rios_comandos                   OK
+22_atribui_o_associativa                       OK
+23_condicionais_aninhados                      OK
+24_la_o_com_express_o_complexa                 GABARITO INVALIDO: ast.esperada.txt tem parenteses desbalanceados
+                                                 esperado: Program(Function(int main() Block(VarDecl(int i=Lit(int,0)), While(Binary(||,Binary(<,Id(i),Lit(int,3)),Binary(==,Id(i),Lit(int,9))),Block(ExprStmt(Assign(Id(i),Binary(+,Id(i),Lit(int,1))))))), Return(Id(i)))))
+                                                 obtido:   Program(Function(int main() Block(VarDecl(int i=Lit(int,0)), While(Binary(||,Binary(<,Id(i),Lit(int,3)),Binary(==,Id(i),Lit(int,9))),Block(ExprStmt(Assign(Id(i),Binary(+,Id(i),Lit(int,1)))))), Return(Id(i)))))
+25_programa_integrado                          OK
+26_ponto_e_v_rgula_ausente_em_declara_o        OK  -> Erro de sintaxe na linha 2, coluna 1: esperado ';' apos a declaracao de 'x', mas foi encontrado fim do arquivo
+27_ponto_e_v_rgula_ausente_ap_s_express_o      OK  -> Erro de sintaxe na linha 1, coluna 20: esperado ';' apos a expressao, mas foi encontrado 'return'
+28_par_ntese_de_condi_o_ausente                OK  -> Erro de sintaxe na linha 1, coluna 24: esperado ')' para fechar a condicao do 'if', mas foi encontrado '{'
+29_chave_de_bloco_ausente                      OK  -> Erro de sintaxe na linha 1, coluna 12: esperado '{' para iniciar o corpo da funcao 'main', mas foi encontrado 
+30_chave_final_ausente                         OK  -> Erro de sintaxe na linha 2, coluna 1: esperado '}' para fechar o bloco aberto na linha 1, coluna 12, mas foi e
+31_par_ntese_final_de_fun_o_ausente            OK  -> Erro de sintaxe na linha 1, coluna 11: esperado tipo (int, float, bool, char ou void) do parametro ou ')' na l
+32_par_metro_sem_tipo                          OK  -> Erro de sintaxe na linha 1, coluna 10: esperado tipo (int, float, bool, char ou void) do parametro ou ')' na l
+33_par_metro_sem_identificador                 OK  -> Erro de sintaxe na linha 1, coluna 13: esperado identificador (nome do parametro) apos o tipo 'int', mas foi e
+34_v_rgula_extra_nos_par_metros                OK  -> Erro de sintaxe na linha 1, coluna 16: esperado tipo (int, float, bool, char ou void) do parametro, mas foi en
+35_inicializador_sem_express_o                 OK  -> Erro de sintaxe na linha 1, coluna 9: esperado expressao (identificador, literal ou '('), mas foi encontrado '
+36_operador_sem_operando                       OK  -> Erro de sintaxe na linha 1, coluna 13: esperado expressao (identificador, literal ou '('), mas foi encontrado 
+37_dois_operadores_consecutivos                OK  -> Erro de sintaxe na linha 1, coluna 13: esperado expressao (identificador, literal ou '('), mas foi encontrado 
+38_atribui_o_sem_destino                       OK  -> Erro de sintaxe na linha 1, coluna 14: esperado expressao (identificador, literal ou '('), mas foi encontrado 
+39_chamada_sem_fechar_par_ntese                OK  -> Erro de sintaxe na linha 1, coluna 22: esperado ')' para fechar a chamada de 'foo', mas foi encontrado ';'
+40_v_rgula_sem_argumento                       OK  -> Erro de sintaxe na linha 1, coluna 20: esperado expressao (argumento) apos ',', mas foi encontrado ')'
+41_ndice_sem_fechar_colchete                   OK  -> Erro de sintaxe na linha 1, coluna 28: esperado ']' para fechar o indice de 'a', mas foi encontrado '='
+42_ndice_sem_express_o                         OK  -> Erro de sintaxe na linha 1, coluna 26: esperado expressao de indice (identificador, literal ou '('), mas foi e
+43_while_sem_corpo                             OK  -> Erro de sintaxe na linha 1, coluna 28: esperado inicio de comando (statement), mas foi encontrado '}'
+44_else_sem_if                                 OK  -> Erro de sintaxe na linha 1, coluna 14: token 'else' inesperado: 'else' sem um 'if' correspondente
+45_return_sem_ponto_e_v_rgula                  OK  -> Erro de sintaxe na linha 1, coluna 23: esperado ';' apos o 'return', mas foi encontrado '}'
+46_tipo_sem_nome                               OK  -> Erro de sintaxe na linha 1, coluna 5: esperado identificador (nome da variavel ou funcao) apos o tipo 'int', m
+47_declara_o_local_inv_lida                    OK  -> Erro de sintaxe na linha 1, coluna 19: esperado identificador (nome da variavel) apos o tipo 'float', mas foi 
+48_fun_o_sem_corpo                             OK  -> Erro de sintaxe na linha 1, coluna 8: esperado '{' para iniciar o corpo da funcao 'f', mas foi encontrado ';'
+49_fechamento_extra                            OK  -> Erro de sintaxe na linha 1, coluna 8: token '}' inesperado: nao ha bloco aberto para ser fechado
+50_condi_o_vazia                               OK  -> Erro de sintaxe na linha 1, coluna 18: esperado expressao (identificador, literal ou '('), mas foi encontrado 
+
+Programas completos da Etapa 1 (devem ser aceitos)
+c01_fibonacci.c                                ACEITO
+c02_primos.c                                   ACEITO
+c03_media_vetor.c                              ACEITO
+c04_menu_interativo.c                          ACEITO
+c05_controle_temperatura.c                     ACEITO
+
+Resumo
+------
+Casos:                         50
+Aprovados:                     49  (dos validos, 8 diferem do esperado so no espacamento)
+Gabarito invalido:             1
+Reprovados:                    0
+Programas da Etapa 1 aceitos:  5 de 5

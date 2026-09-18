@@ -1,4 +1,4 @@
-# Analisador léxico da MINIC (Etapa 1)
+# Compilador MINIC — Etapa 1 (léxico) e Etapa 2 (sintático)
 
 Projeto da disciplina de Compiladores — **Etapa 1: análise léxica** (item
 **a — Tokens**) do Projeto MINIC. Implementa um scanner que lê um programa
@@ -14,16 +14,89 @@ Guilherme Valerio - RA: 2401213
 Victor Marques - RA: 2401270
 Vitor Siqueira - RA: 2302346
 
+## Etapa 2: analisador sintático (parser)
+
+O parser recebe os tokens do scanner da Etapa 1 (que não foi alterado),
+verifica a estrutura do programa pela gramática da MINIC e constrói a AST.
+Foi escrito em **Python e em C**, com a mesma gramática, a mesma AST e as
+mesmas mensagens de erro: as duas versões produzem saída idêntica, byte a
+byte. Gramática, contrato scanner→parser, formato da AST, erros e testes
+estão em [`docs/especificacao-sintatica.md`](docs/especificacao-sintatica.md).
+
+```bash
+cd src
+python parser.py codigo.c                  # Python
+gcc -Wall -Wextra -std=c11 parser.c -o parser
+./parser codigo.c                          # C
+```
+
+- **entrada aceita:** AST no stdout, código de saída 0;
+- **entrada rejeitada:** diagnósticos no stderr (linha, coluna, o que era
+  esperado e o que foi encontrado, com a linha do código marcada), nenhuma
+  AST, código de saída 1. O parser se recupera de erros e relata mais de um
+  erro por arquivo quando existem.
+
+```
+$ python parser.py ../testes/exemplo-aula/exemplo.c
+Program(Function(int main() Block(VarDecl(int total=Binary(+,Lit(int,2),Binary(*,Lit(int,3),Lit(int,4)))), ExprStmt(Call(Id(print),Id(total))), Return(Lit(int,0)))))
+```
+
+Opções extras: `--arvore` (AST indentada, um nó por linha) e `--tokens`
+(lista também os tokens do scanner).
+
+### Testes da Etapa 2
+
+Os scripts do professor e os 50 casos estão em `src/`, junto do scanner,
+como pedido. Os scripts foram copiados sem alterações:
+
+```bash
+cd src
+bash testar_parser_python.sh ./testes-parser-50 ./parser.py
+bash testar_parser_c.sh ./testes-parser-50 ./parser.c
+```
+
+Esses scripts comparam a saída caractere por caractere com
+`ast.esperada.txt` e reportam **16/50** nas duas versões. As 34 diferenças
+não são de estrutura da AST nem de aceitação/rejeição, e estão explicadas
+com os `diff`s na seção 5.1 da especificação sintática:
+
+- nos 25 casos inválidos, o esperado é só a frase "NÃO HÁ AST", mas o
+  README dos testes exige mensagem de erro sintático (o próprio script
+  conta **25 erros sintáticos** detectados);
+- em 8 casos válidos a AST é igual e só o espaçamento difere, porque os
+  arquivos esperados não seguem um espaçamento único;
+- o `ast.esperada.txt` do caso 24 tem um `)` a mais (23 abertos, 24 fechados).
+
+O script `src/verificar_parser.sh` aplica os critérios escritos no README
+do pacote de testes (AST igual ignorando espaços; rejeição com código ≠ 0 e
+mensagem de erro sintático) e confirma **49 aprovados, 0 reprovados e 1
+gabarito inválido (caso 24)** nas duas versões, além dos 5 programas
+completos da Etapa 1 aceitos:
+
+```bash
+bash verificar_parser.sh ./testes-parser-50 ./parser.py
+bash verificar_parser.sh ./testes-parser-50 ./parser.c
+```
+
+Logs de todas as execuções em `testes/resultados/`.
+
 ## Estrutura do repositório
 
 ```
 minic-lexer/
 ├── README.md                       este arquivo
 ├── docs/
-│   └── especificacao-lexica.md     tokens, expressões regulares e autômatos
+│   ├── especificacao-lexica.md     tokens, expressões regulares e autômatos
+│   └── especificacao-sintatica.md  gramática, AST, erros e testes do parser
 ├── src/
 │   ├── scanner.py                  scanner em Python (biblioteca + CLI)
-│   └── scanner.c                   scanner em C (mesma especificação)
+│   ├── scanner.c                   scanner em C (mesma especificação)
+│   ├── parser.py                   parser em Python (usa scanner.py)
+│   ├── parser.c                    parser em C (mesma gramática e saída)
+│   ├── testar_parser_python.sh     script de teste do professor (Etapa 2)
+│   ├── testar_parser_c.sh          script de teste do professor (Etapa 2)
+│   ├── verificar_parser.sh         verificação com os critérios do README dos testes
+│   └── testes-parser-50/           50 casos do parser fornecidos pelo professor
 └── testes/
     ├── run_tests.py                roda os 19 casos e gera o relatório
     ├── scripts-professor/          scripts de teste fornecidos pelo professor
