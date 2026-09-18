@@ -5,9 +5,8 @@ as três partes da atividade prática da Aula 12: **A — contrato entre scanner
 e parser**, **B — AST** e **C — testes**.
 
 O parser foi implementado duas vezes, com exatamente o mesmo comportamento:
-`src/parser.py` (Python) e `src/parser.c` (C). Para qualquer entrada, as duas
-versões produzem a mesma saída, byte a byte, e o mesmo código de saída (ver
-seção 7).
+`src/parser.py` (Python) e `src/parser.c` (C). As duas versões produzem a mesma saída, byte a byte, e o
+mesmo código de saída (ver seção 7).
 
 ```bash
 cd src
@@ -33,13 +32,17 @@ scanner da Etapa 1, que não foi alterado.
 
 - **Python:** `parser.py` importa `tokenize()` diretamente de `scanner.py`
   (mesmo diretório) e recebe a lista de `Token` e a lista de `LexError`.
-- **C:** o `scanner.c` da Etapa 1 é um programa completo (tem `main()` e
-  imprime os tokens direto no stdout), então não pode ser ligado a outro
-  programa sem ser modificado. Como o script do professor compila um único
-  arquivo (`gcc parser.c -o parser`), o `parser.c` contém uma cópia dos
-  mesmos reconhecedores do `scanner.c`, com uma única diferença: cada token
-  é guardado em um vetor em vez de ser impresso. A equivalência com o
-  scanner em Python é verificada pelos testes de paridade (seção 7).
+- **C:** `parser.c` faz `#include "scanner.c"`, incluindo o scanner da
+  Etapa 1 **sem nenhuma alteração**. O parser roda o scanner e captura a
+  saída JSON Lines que ele produz, que é a mesma que `./scanner codigo.c`
+  imprime no terminal: tokens no stdout e erros léxicos no stderr. Depois,
+  lê os tokens dessas linhas. Ou seja, a **saída da Etapa 1 é, literalmente,
+  a entrada da Etapa 2**. Para isso, antes do `#include`, as funções
+  `printf`, `fprintf`, `fputs` e `fputc` são redirecionadas (só dentro do
+  `scanner.c`) para buffers em memória, e o `main()` do scanner é
+  renomeado para não conflitar com o `main()` do parser. Continua sendo um
+  único `gcc parser.c -o parser`, como o script do professor exige; basta
+  que `scanner.c` esteja no mesmo diretório, o que já é pedido.
 
 Cada token entregue ao parser tem:
 
@@ -374,5 +377,17 @@ centenas de níveis de parênteses.
 
 As duas versões foram comparadas com as três formas de saída (padrão,
 `--arvore` e `--tokens`) sobre os 50 casos, os programas e exemplos da
-Etapa 1 e os casos léxicos válidos e inválidos: stdout, stderr e código de
-saída idênticos em todas as 216 execuções.
+Etapa 1, os casos léxicos válidos e inválidos e entradas extras com escapes
+e aspas dentro de cadeias: stdout, stderr e código de saída idênticos em
+todas as execuções, além das 600 entradas aleatórias da seção 6.
+
+**Limitação conhecida, herdada da Etapa 1.** A especificação léxica define
+`IDENT = [A-Za-z_][A-Za-z0-9_]*`, ou seja, só letras sem acento. O
+`scanner.c` segue essa regra, mas o `scanner.py` usa `str.isalpha()`, que
+também aceita letras acentuadas. Por isso, em um código-fonte com letras
+acentuadas fora de comentários e cadeias (ex.: `int média;`), o
+`parser.py` aceita `média` como identificador e o `parser.c` relata o `é`
+como símbolo não reconhecido, como manda a especificação. Nenhum caso de
+teste usa esses caracteres, e o scanner da Etapa 1 foi mantido sem
+alterações nesta entrega. A correção é trocar, no `scanner.py`, as
+verificações `isalpha()`/`isalnum()` por testes restritos a ASCII.

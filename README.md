@@ -20,7 +20,9 @@ O parser recebe os tokens do scanner da Etapa 1 (que não foi alterado),
 verifica a estrutura do programa pela gramática da MINIC e constrói a AST.
 Foi escrito em **Python e em C**, com a mesma gramática, a mesma AST e as
 mesmas mensagens de erro: as duas versões produzem saída idêntica, byte a
-byte. Gramática, contrato scanner→parser, formato da AST, erros e testes
+byte. Nas duas, a saída do scanner da Etapa 1 alimenta o parser: o
+`parser.py` importa o `scanner.py`, e o `parser.c` inclui o `scanner.c` e lê
+a saída JSON Lines que ele produz. Gramática, contrato scanner→parser, formato da AST, erros e testes
 estão em [`docs/especificacao-sintatica.md`](docs/especificacao-sintatica.md).
 
 ```bash

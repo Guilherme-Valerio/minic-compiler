@@ -3,8 +3,8 @@
  *
  * Implementa exatamente a mesma gramatica, a mesma AST, as mesmas
  * mensagens de erro e a mesma recuperacao do parser em Python
- * (src/parser.py): para qualquer entrada, as duas versoes produzem a
- * mesma saida, byte a byte (ver docs/especificacao-sintatica.md).
+ * (src/parser.py): as duas versoes produzem a mesma saida, byte a byte
+ * (ver docs/especificacao-sintatica.md, secao 7).
  *
  * Uso:
  *   ./parser codigo.c              AST compacta (uma linha) no stdout
@@ -17,12 +17,11 @@
  * Compilacao (arquivo unico, como no script de testes do professor):
  *   gcc -Wall -Wextra -std=c11 parser.c -o parser
  *
- * Integracao com o scanner: o scanner.c da Etapa 1 e um programa completo
- * (tem main() e imprime os tokens direto no stdout), por isso nao pode ser
- * ligado a este arquivo sem ser modificado. A secao "SCANNER" abaixo e uma
- * copia dos mesmos reconhecedores de src/scanner.c (mesma especificacao
- * lexica, mesmas regras de recuperacao), com uma unica diferenca: em vez
- * de imprimir cada token, ele e guardado em um vetor que o parser consome.
+ * Integracao com o scanner (Etapa 1 -> Etapa 2): o src/scanner.c da
+ * Etapa 1 e incluido sem nenhuma alteracao (#include "scanner.c"). O
+ * parser roda o scanner, captura a saida JSON Lines que ele produz (a
+ * mesma que ./scanner imprime no terminal) e le os tokens dessa saida.
+ * Por isso scanner.c e parser.c precisam estar no mesmo diretorio.
  */
 
 #include <ctype.h>
@@ -108,8 +107,18 @@ static void sb_add(StrBuf *b, const char *fmt, ...) {
 }
 
 /* ===================================================================== */
-/* SCANNER (mesma logica de src/scanner.c; tokens guardados em vetor)     */
+/* INTEGRACAO COM O SCANNER DA ETAPA 1 (src/scanner.c, sem alteracoes)    */
 /* ===================================================================== */
+/*
+ * O scanner.c da Etapa 1 e incluido aqui como esta. Ele escreve cada token
+ * como uma linha JSON no stdout e cada erro lexico como uma linha JSON no
+ * stderr, sempre por meio de printf/fprintf/fputs/fputc. Antes do #include,
+ * essas quatro funcoes sao redirecionadas (so dentro do scanner.c) para
+ * buffers em memoria; o main() do scanner e renomeado para nao conflitar
+ * com o main() do parser. Depois de rodar o scanner, o parser le as linhas
+ * JSON capturadas - exatamente a saida da Etapa 1 - e as converte no vetor
+ * de tokens que a analise sintatica consome.
+ */
 
 typedef struct {
     const char *type;   /* INT, IDENT, SEMICOLON, ..., EOF */
@@ -126,31 +135,82 @@ typedef struct {
 static PtrList g_tokens;    /* Token*    */
 static PtrList g_lexerrs;   /* LexError* */
 
-static char *g_src = NULL;
-static size_t g_len = 0;
-static size_t g_pos = 0;
-static int g_line = 1;
-static int g_col = 1;
+static StrBuf g_scan_stdout; /* linhas JSON dos tokens (stdout do scanner) */
+static StrBuf g_scan_stderr; /* linhas JSON dos erros (stderr do scanner)  */
 
-typedef struct { const char *word; const char *type; } Reserved;
-static const Reserved RESERVED[] = {
-    {"int", "INT"},       {"float", "FLOAT"},   {"bool", "BOOL"},
-    {"char", "CHAR"},     {"void", "VOID"},     {"if", "IF"},
-    {"else", "ELSE"},     {"while", "WHILE"},   {"for", "FOR"},
-    {"return", "RETURN"}, {"break", "BREAK"},   {"continue", "CONTINUE"},
-    {"true", "TRUE"},     {"false", "FALSE"},   {"print", "PRINT"},
-    {"read", "READ"},
-};
-#define N_RESERVED (sizeof(RESERVED) / sizeof(RESERVED[0]))
+static StrBuf *scan_capture(FILE *f) {
+    if (f == stdout) return &g_scan_stdout;
+    if (f == stderr) return &g_scan_stderr;
+    return NULL;
+}
 
-typedef struct { char ch; const char *type; } SingleCharToken;
-static const SingleCharToken SINGLE_CHAR_TOKENS[] = {
-    {'(', "LPAREN"}, {')', "RPAREN"}, {'[', "LBRACKET"}, {']', "RBRACKET"},
-    {'{', "LBRACE"}, {'}', "RBRACE"}, {',', "COMMA"},    {';', "SEMICOLON"},
-    {'.', "DOT"},    {'+', "PLUS"},   {'-', "MINUS"},    {'*', "STAR"},
-    {'%', "PERCENT"},
-};
-#define N_SINGLE (sizeof(SINGLE_CHAR_TOKENS) / sizeof(SINGLE_CHAR_TOKENS[0]))
+static int scan_hook_vfprintf(FILE *f, const char *fmt, va_list ap) {
+    StrBuf *b = scan_capture(f);
+    if (!b) return vfprintf(f, fmt, ap);
+    char small[256];
+    va_list copy;
+    va_copy(copy, ap);
+    int need = vsnprintf(small, sizeof(small), fmt, copy);
+    va_end(copy);
+    if (need < 0) return need;
+    if ((size_t)need < sizeof(small)) {
+        sb_add(b, "%s", small);
+    } else {
+        char *big = xmalloc((size_t)need + 1);
+        vsnprintf(big, (size_t)need + 1, fmt, ap);
+        sb_add(b, "%s", big);
+    }
+    return need;
+}
+
+static int scan_hook_printf(const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    int r = scan_hook_vfprintf(stdout, fmt, ap);
+    va_end(ap);
+    return r;
+}
+
+static int scan_hook_fprintf(FILE *f, const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    int r = scan_hook_vfprintf(f, fmt, ap);
+    va_end(ap);
+    return r;
+}
+
+static int scan_hook_fputs(const char *s, FILE *f) {
+    StrBuf *b = scan_capture(f);
+    if (!b) return fputs(s, f);
+    sb_add(b, "%s", s);
+    return 0;
+}
+
+static int scan_hook_fputc(int c, FILE *f) {
+    StrBuf *b = scan_capture(f);
+    if (!b) return fputc(c, f);
+    if (c == 0) return c; /* bytes NUL nao ocorrem na saida JSON do scanner */
+    sb_add(b, "%c", c);
+    return c;
+}
+
+/* #undef antes de cada #define: algumas bibliotecas C definem essas
+ * funcoes tambem como macros */
+#undef printf
+#undef fprintf
+#undef fputs
+#undef fputc
+#define main    minic_scanner_main
+#define printf  scan_hook_printf
+#define fprintf scan_hook_fprintf
+#define fputs   scan_hook_fputs
+#define fputc   scan_hook_fputc
+#include "scanner.c"
+#undef main
+#undef printf
+#undef fprintf
+#undef fputs
+#undef fputc
 
 /* mesmas mensagens de ERROR_MESSAGES em scanner.py */
 static const char *lex_error_message(const char *code) {
@@ -164,247 +224,141 @@ static const char *lex_error_message(const char *code) {
     return code;
 }
 
-static int is_punct_start(int c) {
-    static const char *PUNCT = "()[]{},;.+-*/%<>=!&|";
-    return c != 0 && strchr(PUNCT, c) != NULL;
-}
+/* -- leitura das linhas JSON produzidas pelo scanner -------------------- */
 
-static int peek(int offset) {
-    size_t i = g_pos + (size_t)offset;
-    if (offset < 0 || i >= g_len) return -1;
-    return (unsigned char)g_src[i];
-}
-
-static int advance_byte(void) {
-    unsigned char c = (unsigned char)g_src[g_pos++];
-    if (c == '\n') { g_line++; g_col = 1; }
-    else if ((c & 0xC0) != 0x80) g_col++;
-    return c;
-}
-
-static int advance(void) {
-    int c = advance_byte();
-    if ((unsigned char)c >= 0x80) {
-        int extra = 0;
-        if (((unsigned char)c & 0xE0) == 0xC0) extra = 1;
-        else if (((unsigned char)c & 0xF0) == 0xE0) extra = 2;
-        else if (((unsigned char)c & 0xF8) == 0xF0) extra = 3;
-        for (int i = 0; i < extra && g_pos < g_len; i++) advance_byte();
+/* le uma cadeia JSON a partir de *pp (apontando para a aspa de abertura) */
+static char *json_read_string(const char **pp) {
+    const char *p = *pp + 1;
+    StrBuf b = {0};
+    sb_add(&b, "%s", "");
+    while (*p && *p != '"') {
+        if (*p == '\\' && p[1]) {
+            p++;
+            switch (*p) {
+                case 'n': sb_add(&b, "\n"); break;
+                case 't': sb_add(&b, "\t"); break;
+                case 'r': sb_add(&b, "\r"); break;
+                case 'b': sb_add(&b, "\b"); break;
+                case 'f': sb_add(&b, "\f"); break;
+                case 'u': {
+                    unsigned v = 0;
+                    for (int i = 1; i <= 4 && isxdigit((unsigned char)p[i]); i++)
+                        v = v * 16 + (unsigned)(isdigit((unsigned char)p[i])
+                                ? p[i] - '0' : (tolower((unsigned char)p[i]) - 'a' + 10));
+                    if (v) sb_add(&b, "%c", (char)v); /* o scanner so usa \u para bytes < 0x20 */
+                    p += 4;
+                    break;
+                }
+                default: sb_add(&b, "%c", *p); break; /* \" \\ \/ */
+            }
+            p++;
+        } else {
+            sb_add(&b, "%c", *p);
+            p++;
+        }
     }
-    return c;
+    if (*p == '"') p++;
+    *pp = p;
+    return b.s;
 }
 
-static int at_end(void) { return g_pos >= g_len; }
-
-static size_t codepoint_count(const char *from, const char *to) {
-    size_t n = 0;
-    for (const char *p = from; p < to; p++)
-        if (((unsigned char)*p & 0xC0) != 0x80) n++;
-    return n;
-}
-
-static int c_is_digit(int c) { return c >= '0' && c <= '9'; }
-static int c_is_alpha(int c) {
-    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
-}
-static int c_is_alnum(int c) { return c_is_digit(c) || c_is_alpha(c); }
-
-static void emit(const char *type, const char *lex, size_t len, int line, int col) {
-    Token *t = xmalloc(sizeof(Token));
-    t->type = type;
-    t->lexeme = xstrndup(lex, len);
-    t->line = line;
-    t->column = col;
-    list_push(&g_tokens, t);
-}
-
-static void emit_error(const char *err, const char *lex, size_t len, int line, int col) {
-    LexError *e = xmalloc(sizeof(LexError));
-    e->error = err;
-    e->lexeme = xstrndup(lex, len);
-    e->line = line;
-    e->column = col;
-    list_push(&g_lexerrs, e);
-}
-
-static const char *lookup_reserved(const char *lex, size_t len) {
-    for (size_t i = 0; i < N_RESERVED; i++)
-        if (strlen(RESERVED[i].word) == len && strncmp(RESERVED[i].word, lex, len) == 0)
-            return RESERVED[i].type;
+/* procura "chave": no objeto JSON da linha e devolve o ponteiro do valor */
+static const char *json_find(const char *line, const char *key) {
+    char pat[64];
+    snprintf(pat, sizeof(pat), "\"%s\":", key);
+    const char *p = line;
+    while ((p = strstr(p, pat)) != NULL) {
+        /* garante que e uma chave (precedida por '{' ou ','), nao um valor */
+        if (p == line || p[-1] == '{' || p[-1] == ',') return p + strlen(pat);
+        p++;
+    }
     return NULL;
 }
 
-static void scan_line_comment(void) {
-    advance(); advance();
-    while (!at_end() && peek(0) != '\n') advance();
+static int json_get_int(const char *line, const char *key) {
+    const char *p = json_find(line, key);
+    return p ? atoi(p) : 0;
 }
 
-static void scan_block_comment(void) {
-    int start_line = g_line, start_col = g_col;
-    size_t start_pos = g_pos;
-    advance(); advance();
-    int closed = 0;
-    while (!at_end()) {
-        if (peek(0) == '*' && peek(1) == '/') { advance(); advance(); closed = 1; break; }
-        advance();
-    }
-    if (!closed)
-        emit_error("UNTERMINATED_BLOCK_COMMENT", g_src + start_pos, g_pos - start_pos,
-                   start_line, start_col);
-}
-
-static void scan_identifier(void) {
-    int start_line = g_line, start_col = g_col;
-    size_t start_pos = g_pos;
-    while (c_is_alnum(peek(0))) advance();
-    size_t len = g_pos - start_pos;
-    const char *type = lookup_reserved(g_src + start_pos, len);
-    emit(type ? type : "IDENT", g_src + start_pos, len, start_line, start_col);
-}
-
-static void scan_number(void) {
-    int start_line = g_line, start_col = g_col;
-    size_t start_pos = g_pos;
-    while (c_is_digit(peek(0))) advance();
-
-    if (c_is_alpha(peek(0))) { /* identificador invalido (backoff) */
-        while (c_is_alnum(peek(0))) advance();
-        const char *full = g_src + start_pos;
-        size_t full_len = g_pos - start_pos;
-        emit_error("INVALID_IDENTIFIER", full, full_len, start_line, start_col);
-        size_t digits_len = 0;
-        while (digits_len < full_len && c_is_digit(full[digits_len])) digits_len++;
-        emit("INT_LIT", full, digits_len, start_line, start_col);
-        const char *ident_part = full + digits_len;
-        size_t ident_len = full_len - digits_len;
-        const char *type = lookup_reserved(ident_part, ident_len);
-        emit(type ? type : "IDENT", ident_part, ident_len, start_line,
-             start_col + (int)digits_len);
-        return;
-    }
-    if (peek(0) == '.' && c_is_digit(peek(1))) { /* real */
-        advance();
-        while (c_is_digit(peek(0))) advance();
-        emit("FLOAT_LIT", g_src + start_pos, g_pos - start_pos, start_line, start_col);
-        return;
-    }
-    if (peek(0) == '.' && peek(1) != '.') { /* real malformado (backoff) */
-        emit_error("MALFORMED_REAL_LITERAL", g_src + start_pos, (g_pos - start_pos) + 1,
-                   start_line, start_col);
-        emit("INT_LIT", g_src + start_pos, g_pos - start_pos, start_line, start_col);
-        return;
-    }
-    emit("INT_LIT", g_src + start_pos, g_pos - start_pos, start_line, start_col);
-}
-
-static void scan_char_literal(void) {
-    int start_line = g_line, start_col = g_col;
-    size_t start_pos = g_pos;
-    advance();
-    size_t content_start = g_pos, content_len = 0;
-    if (!at_end() && peek(0) != '\'' && peek(0) != '\n') {
-        int c = advance();
-        content_len = g_pos - content_start;
-        if (c == '\\' && !at_end() && peek(0) != '\n') {
-            advance();
-            content_len = g_pos - content_start;
-        }
-    }
-    if (!at_end() && peek(0) == '\'') {
-        advance();
-        emit("CHAR_LIT", g_src + start_pos, g_pos - start_pos, start_line, start_col);
-        return;
-    }
-    char err_lex[20];
-    err_lex[0] = '\'';
-    size_t n = content_len < sizeof(err_lex) - 1 ? content_len : sizeof(err_lex) - 1;
-    memcpy(err_lex + 1, g_src + content_start, n);
-    emit_error("UNTERMINATED_CHAR_LITERAL", err_lex, n + 1, start_line, start_col);
-    if (!at_end() && peek(0) != '\n') advance();
-}
-
-static void scan_string_literal(void) {
-    int start_line = g_line, start_col = g_col;
-    size_t start_pos = g_pos;
-    advance();
-    int closed = 0;
-    while (!at_end() && peek(0) != '\n') {
-        if (peek(0) == '"') { advance(); closed = 1; break; }
-        int c = advance();
-        if (c == '\\' && !at_end() && peek(0) != '\n') advance();
-    }
-    if (closed) {
-        emit("STRING_LIT", g_src + start_pos, g_pos - start_pos, start_line, start_col);
-        return;
-    }
-    size_t eol_pos = g_pos;
-    emit_error("UNTERMINATED_STRING_LITERAL", g_src + start_pos, eol_pos - start_pos,
-               start_line, start_col);
-    size_t content_start = start_pos + 1, recovery_pos = eol_pos;
-    for (size_t i = content_start; i < eol_pos; i++)
-        if (is_punct_start((unsigned char)g_src[i])) { recovery_pos = i; break; }
-    size_t delta = codepoint_count(g_src + content_start, g_src + recovery_pos);
-    g_pos = recovery_pos;
-    g_col = start_col + 1 + (int)delta;
-}
-
-static void scan_operator(void) {
-    int line = g_line, col = g_col;
-    int ch = advance();
-    if (ch == '=') {
-        if (peek(0) == '=') { advance(); emit("EQ", "==", 2, line, col); }
-        else emit("ASSIGN", "=", 1, line, col);
-    } else if (ch == '!') {
-        if (peek(0) == '=') { advance(); emit("NEQ", "!=", 2, line, col); }
-        else emit("NOT", "!", 1, line, col);
-    } else if (ch == '<') {
-        if (peek(0) == '=') { advance(); emit("LE", "<=", 2, line, col); }
-        else emit("LT", "<", 1, line, col);
-    } else if (ch == '>') {
-        if (peek(0) == '=') { advance(); emit("GE", ">=", 2, line, col); }
-        else emit("GT", ">", 1, line, col);
-    } else if (ch == '&') {
-        if (peek(0) == '&') { advance(); emit("AND", "&&", 2, line, col); }
-        else emit_error("INCOMPLETE_LOGICAL_OPERATOR", "&", 1, line, col);
-    } else if (ch == '|') {
-        if (peek(0) == '|') { advance(); emit("OR", "||", 2, line, col); }
-        else emit_error("INCOMPLETE_LOGICAL_OPERATOR", "|", 1, line, col);
-    } else if (ch == '/') {
-        emit("SLASH", "/", 1, line, col);
+/* Os campos "token" e "error" vem antes do "lexeme" em cada linha, e o
+ * lexema e lido em sequencia, para que um lexema contendo o texto de uma
+ * chave (ex.: "\"line\":") nunca seja confundido com um campo. */
+static void read_scanner_line(const char *line) {
+    const char *p;
+    int is_token = strncmp(line, "{\"token\":", 9) == 0;
+    int is_error = strncmp(line, "{\"error\":", 9) == 0;
+    if (!is_token && !is_error) return;
+    p = line + 9;
+    char *kind = json_read_string(&p);           /* tipo do token / codigo */
+    if (strncmp(p, ",\"lexeme\":", 10) != 0) return;
+    p += 10;
+    char *lexeme = json_read_string(&p);
+    /* o restante (attribute, line, column) nao contem o lexema */
+    int line_no = json_get_int(p, "line");
+    int col_no = json_get_int(p, "column");
+    if (is_token) {
+        Token *t = xmalloc(sizeof(Token));
+        t->type = kind;
+        t->lexeme = lexeme;
+        t->line = line_no;
+        t->column = col_no;
+        list_push(&g_tokens, t);
+    } else {
+        LexError *e = xmalloc(sizeof(LexError));
+        e->error = kind;
+        e->lexeme = lexeme;
+        e->line = line_no;
+        e->column = col_no;
+        list_push(&g_lexerrs, e);
     }
 }
 
-static void scan_token(void) {
-    int ch = peek(0);
-    if (ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n') { advance(); return; }
-    if (ch == '/' && peek(1) == '/') { scan_line_comment(); return; }
-    if (ch == '/' && peek(1) == '*') { scan_block_comment(); return; }
-    if (c_is_digit(ch)) { scan_number(); return; }
-    if (c_is_alpha(ch)) { scan_identifier(); return; }
-    if (ch == '\'') { scan_char_literal(); return; }
-    if (ch == '"') { scan_string_literal(); return; }
-    if (ch == '=' || ch == '!' || ch == '<' || ch == '>' || ch == '&' || ch == '|' || ch == '/') {
-        scan_operator();
-        return;
+static void read_scanner_output(const StrBuf *b) {
+    if (!b->s) return;
+    const char *p = b->s;
+    while (*p) {
+        const char *nl = strchr(p, '\n');
+        size_t n = nl ? (size_t)(nl - p) : strlen(p);
+        char *line = xstrndup(p, n);
+        read_scanner_line(line);
+        p += n + (nl ? 1 : 0);
     }
-    for (size_t i = 0; i < N_SINGLE; i++) {
-        if (SINGLE_CHAR_TOKENS[i].ch == ch) {
-            int line = g_line, col = g_col;
-            char lex[2] = {(char)ch, 0};
-            advance();
-            emit(SINGLE_CHAR_TOKENS[i].type, lex, 1, line, col);
-            return;
-        }
-    }
-    int line = g_line, col = g_col;
-    size_t start = g_pos;
-    advance();
-    emit_error("UNKNOWN_SYMBOL", g_src + start, g_pos - start, line, col);
 }
 
-static void scan_all(void) {
-    while (!at_end()) scan_token();
-    emit("EOF", "", 0, g_line, g_col);
+/* O scanner.c registra so o primeiro byte de um simbolo desconhecido
+ * multibyte (ex.: 'ç'). Para a mensagem ficar igual a do parser em Python,
+ * o lexema e completado com os bytes de continuacao UTF-8 do codigo-fonte. */
+static void complete_utf8_lexeme(LexError *e) {
+    if (strlen(e->lexeme) != 1 || ((unsigned char)e->lexeme[0] & 0xC0) != 0xC0) return;
+    size_t i = 0;
+    int line = 1, col = 1;
+    while (i < g_len && !(line == e->line && col == e->column)) {
+        unsigned char c = (unsigned char)g_src[i++];
+        if (c == '\n') { line++; col = 1; }
+        else if ((c & 0xC0) != 0x80) col++;
+    }
+    /* avanca ate o inicio do code point na coluna encontrada */
+    while (i < g_len && ((unsigned char)g_src[i] & 0xC0) == 0x80) i++;
+    if (i >= g_len) return;
+    size_t j = i + 1;
+    while (j < g_len && ((unsigned char)g_src[j] & 0xC0) == 0x80) j++;
+    e->lexeme = xstrndup(g_src + i, j - i);
+}
+
+/* roda o scanner da Etapa 1 sobre g_src e le a saida dele */
+static void run_scanner(void) {
+    scan_all();
+    read_scanner_output(&g_scan_stdout);
+    read_scanner_output(&g_scan_stderr);
+    for (int i = 0; i < g_lexerrs.n; i++) complete_utf8_lexeme((LexError *)g_lexerrs.items[i]);
+    if (g_tokens.n == 0) { /* nunca acontece: o scanner sempre emite EOF */
+        Token *t = xmalloc(sizeof(Token));
+        t->type = "EOF";
+        t->lexeme = "";
+        t->line = g_line;
+        t->column = g_col;
+        list_push(&g_tokens, t);
+    }
 }
 
 /* ===================================================================== */
@@ -1029,22 +983,6 @@ static void print_location(int line, int col) {
     fprintf(stderr, "^\n");
 }
 
-static char *read_file(const char *path, size_t *out_len) {
-    FILE *f = fopen(path, "rb");
-    if (!f) return NULL;
-    fseek(f, 0, SEEK_END);
-    long size = ftell(f);
-    if (size < 0) { fclose(f); return NULL; }
-    fseek(f, 0, SEEK_SET);
-    char *buf = malloc((size_t)size + 1);
-    if (!buf) { fclose(f); return NULL; }
-    size_t n = fread(buf, 1, (size_t)size, f);
-    buf[n] = '\0';
-    fclose(f);
-    *out_len = n;
-    return buf;
-}
-
 int main(int argc, char **argv) {
     const char *path = NULL;
     int show_tokens = 0, as_tree = 0, nfiles = 0;
@@ -1064,7 +1002,7 @@ int main(int argc, char **argv) {
         return 2;
     }
 
-    scan_all();
+    run_scanner();
 
     if (show_tokens) {
         printf("TOKENS\n");
